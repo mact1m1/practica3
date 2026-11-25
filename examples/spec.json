@@ -1,0 +1,6 @@
+[
+  {"op":"const","value":386},
+  {"op":"read","address":526},
+  {"op":"store","offset":8},
+  {"op":"shl"}
+]
