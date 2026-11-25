@@ -1,0 +1,10 @@
+[
+  {"op":"const","value":30},
+  {"op":"const","value":2},
+  {"op":"store","offset":0},
+  {"op":"const","value":31},
+  {"op":"const","value":30},
+  {"op":"const","value":5},
+  {"op":"shl"},
+  {"op":"store","offset":0}
+]

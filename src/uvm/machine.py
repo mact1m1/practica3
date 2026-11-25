@@ -7,6 +7,7 @@ from .isa import ISA
 
 
 CELL_COUNT = 1 << ISA["read"].width
+MAX_VALUE_BITS = 4096
 
 
 def address(index):
@@ -30,6 +31,14 @@ class Machine:
             raise ValueError("stack underflow")
         return self.stack.pop()
 
+    def shift(self):
+        """Shift the top value by a count read indirectly from memory."""
+        value = self.pop()
+        count = self.memory[address(self.pop())]
+        if value and value.bit_length() + count > MAX_VALUE_BITS:
+            raise ValueError("shift result exceeds VM resource limit")
+        self.stack.append(value << count if value else 0)
+
     def step(self, instruction):
         """Execute one decoded instruction in specification pop order."""
         form, operand = instruction.form, instruction.operand
@@ -40,6 +49,8 @@ class Machine:
         elif form == ISA["store"]:
             value = self.pop()
             self.memory[address(self.pop() + operand)] = value
+        elif form == ISA["shl"]:
+            self.shift()
         else:
             raise ValueError("unsupported operation")
 
