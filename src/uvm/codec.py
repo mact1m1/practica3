@@ -18,3 +18,17 @@ def encode(instruction):
 def byte_listing(data):
     """Format one instruction exactly as in the byte examples."""
     return ", ".join(f"0x{byte:02X}" for byte in data)
+
+
+def decode(data):
+    """Validate size, opcode and unused bits before unpacking a word."""
+    if len(data) != WORD_BYTES:
+        raise ValueError("incomplete instruction")
+    word = int.from_bytes(data, "little")
+    form = BY_OPCODE.get(word & OP_MASK)
+    if form is None:
+        raise ValueError("unknown opcode")
+    operand = word >> OP_BITS
+    if operand >= (1 << form.width):
+        raise ValueError("nonzero reserved bits")
+    return Instruction(form, operand)

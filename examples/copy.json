@@ -1,0 +1,20 @@
+[
+  {"op":"const","value":10},
+  {"op":"const","value":3},
+  {"op":"store","offset":0},
+  {"op":"const","value":10},
+  {"op":"const","value":7},
+  {"op":"store","offset":1},
+  {"op":"const","value":10},
+  {"op":"const","value":11},
+  {"op":"store","offset":2},
+  {"op":"const","value":20},
+  {"op":"read","address":10},
+  {"op":"store","offset":0},
+  {"op":"const","value":20},
+  {"op":"read","address":11},
+  {"op":"store","offset":1},
+  {"op":"const","value":20},
+  {"op":"read","address":12},
+  {"op":"store","offset":2}
+]

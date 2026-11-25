@@ -6,6 +6,7 @@ import sys
 
 from .codec import byte_listing, encode
 from .isa import parse
+from .machine import Machine
 
 
 def assemble(args):
@@ -20,6 +21,13 @@ def assemble(args):
             print(f"{instruction.fields()}: {byte_listing(word)}")
 
 
+def interpret(args):
+    """Execute a binary and save the requested inclusive range."""
+    machine = Machine()
+    machine.run(args.binary.read_bytes())
+    machine.dump(args.dump, *args.span)
+
+
 def parser():
     """Build subcommands and their required positional paths."""
     result = argparse.ArgumentParser(prog="uvm")
@@ -29,6 +37,12 @@ def parser():
     asm.add_argument("binary", type=Path)
     asm.add_argument("--test", action="store_true")
     asm.set_defaults(action=assemble)
+    run = commands.add_parser("run", help="execute a binary and dump CSV")
+    run.add_argument("binary", type=Path)
+    run.add_argument("dump", type=Path)
+    run.add_argument("--range", dest="span", nargs=2, type=int,
+                     metavar=("FIRST", "LAST"), required=True)
+    run.set_defaults(action=interpret)
     return result
 
 
