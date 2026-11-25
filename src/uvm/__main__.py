@@ -4,15 +4,20 @@ import argparse
 from pathlib import Path
 import sys
 
+from .codec import byte_listing, encode
 from .isa import parse
 
 
 def assemble(args):
     """Translate the JSON program into instruction fields."""
     program = parse(args.source.read_text(encoding="utf-8"))
+    words = [encode(instruction) for instruction in program]
+    data = b"".join(words)
+    args.binary.write_bytes(data)
+    print(f"Bytes: {len(data)}")
     if args.test:
-        for instruction in program:
-            print(instruction.fields())
+        for instruction, word in zip(program, words):
+            print(f"{instruction.fields()}: {byte_listing(word)}")
 
 
 def parser():
